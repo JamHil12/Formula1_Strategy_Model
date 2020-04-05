@@ -7,13 +7,15 @@ This project relies on the historial F1 datasets that are publically available v
 It also relies on data publically available from F1's sole tyre manufacturer Pirelli, for manual collection of tyre stint and circuit characteristics data.
 
 ## Technical Requirements
-All Python code was originally created using Python 3.7 (32 bit), using the packages available in the requirements.txt file.
+You will need:
+(a) a Google Cloud Platform (GCP) account and Google BigQuery project, which will store all the datasets used in the modelling
+(b) Python, with which all the models are based. All Python code was originally created using Python 3.7 (32 bit), and all the packages needed are available in the requirements.txt file for ease of setting up the Python environment.
 To run any Jupyter notebooks, type 'jupyter lab' in the command line once the Python virtual environment is activated, to launch the JupyterLab interface.
 
 ## How to get started
-1. Sign up to Google Cloud Platform (GCP) & create a Google BigQuery project. Create datasets in your BigQuery project called *"Custom_Lookups"*, *"F1_Modelling_Raw"* and *"F1_Modelling_Combined"*, which will store all the data you process.
-2. Create a service account which has access to the BigQuery project, and store the json file for the service account's credentials in the folder *"credentials"*
-3. Amend the Python files in  the *"python_..."* folders so that any reference to key_path points to the path of the json file retrieved in step 2
+1. Create datasets in your BigQuery project called *"Custom_Lookups"*, *"F1_Modelling_Raw"* and *"F1_Modelling_Combined"*, which will store all the data you process.
+2. Create a service account which has access to the BigQuery project, and store the json file for the service account's credentials in the folder *"credentials"*.  As of March 2020, the area to create and manage service accounts is accessible via 'IAM & Admin' -> 'Service Accounts' in the GCP user interface.
+3. Amend all the Python files in the *"python_..."* folders so that any reference to key_path points to the path of the json file which you saved down in step 2
 4. (a) Choose a particular race, and manually collect tyre stint data from Pirelli's site, e.g. via https://racingspot.pirelli.com/global/en-ww/gp-hungary. Use the template csvs available in data/manual_lookups as an example. Once completed, these csvs should be uploaded manually into BigQuery, into a dataset called *"Custom_Lookups"* with table name *"Tyre_Stints_{ROUND_NUM}"*, replacing {ROUND_NUM} with the YYYYRR representation of the round (year of the F1 season and the two-digit round number combined).
 4. (b) Also, upload the *circuit_ratings.csv* file availabl in *data/manual_lookups* manually into BigQuery. It should go under the dataset *"Custom_Lookups*" with table name *"Circuit_Ratings"*. This csv file was again manually collected from Pirelli's site.
 5. Go to *"python_Upload/Upload__Master.py"*, enter a year, start and end round number, as well as what type of data you want to upload. Running this will download all the key datasets (drivers, constructors, race laptimes, pitstops, qualifying laptimes etc) from the Ergast API, and store them in the *"F1_Modelling_Raw"* dataset in BigQuery. If you select to also upload combined data, then it will use the manual lookups from step 4 to merge the tyre stint data with the Ergast data, and store the complete combined dataset in *"F1_Modelling_Combined"* in BigQuery.
