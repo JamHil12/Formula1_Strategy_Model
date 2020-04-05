@@ -1,15 +1,15 @@
 # Formula 1 Strategy Model
-# *Developer: Jamie Hilton*
+### *Developer: Jamie Hilton*
 This was a 'weekend project' done in Jamie Hilton's spare time, to devise a simple model using Python to try to optimise a Formula 1 race strategy.
 
 ## Acknowledgements
-This project relies on the historial F1 datasets that are publically available via the Ergast API - for documentation please refer to http://ergast.com/mrd/.
+This project relies on the historial F1 datasets that are publically available via the Ergast API - for documentation please refer to http://ergast.com/mrd/. \
 It also relies on data publically available from F1's sole tyre manufacturer Pirelli, for manual collection of tyre stint and circuit characteristics data.
 
 ## Technical Requirements
-You will need:
-(a) a Google Cloud Platform (GCP) account and Google BigQuery project, which will store all the datasets used in the modelling
-(b) Python, with which all the models are based. All Python code was originally created using Python 3.7 (32 bit), and all the packages needed are available in the requirements.txt file for ease of setting up the Python environment.
+You will need:\
+(a) a Google Cloud Platform (GCP) account and Google BigQuery project, which will store all the datasets used in the modelling\
+(b) Python, with which all the models are based. All Python code was originally created using Python 3.7 (32 bit), and all the packages needed are available in the requirements.txt file for ease of setting up the Python environment.\
 To run any Jupyter notebooks, type 'jupyter lab' in the command line once the Python virtual environment is activated, to launch the JupyterLab interface.
 
 ## How to get started
