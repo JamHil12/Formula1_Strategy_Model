@@ -1,28 +1,18 @@
-# Formula 1 Strategy Model
-# *Developer: Jamie Hilton*
-This was a 'weekend project' done in Jamie Hilton's spare time, to devise a simple model using Python to try to optimise a Formula 1 race strategy.
+This *download* folder contains the Python code required to get all the historical F1 Grand Prix information required from the Ergast API (http://ergast.com/mrd/), and upload it to your BigQuery project.
 
-## Acknowledgements
-This project relies on the historial F1 datasets that are publically available via the Ergast API - for documentation please refer to http://ergast.com/mrd/.
-It also relies on data publically available from F1's sole tyre manufacturer Pirelli, for manual collection of tyre stint and circuit characteristics data.
+## Instructions
+1. In the *credentials* folder, paste in a json file from GCP for BigQuery authentication into your project.
+2. Follow the instructions in the README.md file of the *data/manual_lookups* folder to create manual lookups and upload them to your BigQuery project
+3. Open the file *Download__Master.py*. Edit the parameters to choose a year and a range of round numbers to download/upload, as well as to configure what type of data you want to download/upload. Running this Python code will download all the requested data from the Ergast API, save the results as csv files in the *bigquery_upload* folder, and then upload the datasets into BigQuery.
 
-## Technical Requirements
-All Python code was originally created using Python 3.7 (32 bit), using the packages available in the requirements.txt file.
-To run any Jupyter notebooks, type 'jupyter lab' in the command line once the Python virtual environment is activated, to launch the JupyterLab interface.
-
-## How to get started
-1. Sign up to Google Cloud Platform (GCP) & create a Google BigQuery project. Create datasets in your BigQuery project called *"Custom_Lookups"*, *"F1_Modelling_Raw"* and *"F1_Modelling_Combined"*, which will store all the data you process.
-2. Create a service account which has access to the BigQuery project, and store the json file for the service account's credentials in the folder *"credentials"*
-3. Amend the Python files in  the *"python_..."* folders so that any reference to key_path points to the path of the json file retrieved in step 2
-4. (a) Choose a particular race, and manually collect tyre stint data from Pirelli's site, e.g. via https://racingspot.pirelli.com/global/en-ww/gp-hungary. Use the template csvs available in data/manual_lookups as an example. Once completed, these csvs should be uploaded manually into BigQuery, into a dataset called *"Custom_Lookups"* with table name *"Tyre_Stints_{ROUND_NUM}"*, replacing {ROUND_NUM} with the YYYYRR representation of the round (year of the F1 season and the two-digit round number combined).
-4. (b) Also, upload the *circuit_ratings.csv* file availabl in *data/manual_lookups* manually into BigQuery. It should go under the dataset *"Custom_Lookups*" with table name *"Circuit_Ratings"*. This csv file was again manually collected from Pirelli's site.
-5. Go to *"python_Upload/Upload__Master.py"*, enter a year, start and end round number, as well as what type of data you want to upload. Running this will download all the key datasets (drivers, constructors, race laptimes, pitstops, qualifying laptimes etc) from the Ergast API, and store them in the *"F1_Modelling_Raw"* dataset in BigQuery. If you select to also upload combined data, then it will use the manual lookups from step 4 to merge the tyre stint data with the Ergast data, and store the complete combined dataset in *"F1_Modelling_Combined"* in BigQuery.
-6. Finally, go to *"python_Modelling/Modelling__Master.py"* which can be used to call the various race strategy models.
-
-## Folders in this Git repository
-| Folder Name  | Description |
-| ------------ | ----------- |
-| credentials  | In here you should store the json file for your Google BigQuery credentials, for the project in which you want to store all your results.  |
-| data  | Contains manual lookup csv files which can be manually uploaded into BigQuery to supplement the data from the Ergast API. For example, tyre stint data can be manually collected and uploaded. | 
-| python_Modelling | In here are all the Python files needed to call the optimal strategy models, plot laptimes and perform grid search optimisation across different modelling parameters. The file 'Modelling__Master.py' should be used in the first instance; this calls all the other files in one run. |
-| python_Upload | In here are all the Python files needed to call the Ergast API and store the results into Google BigQuery. The file 'Upload__Master.py' should be used in the first instance; this calls all the other files in one run. |
+## BigQuery tables created by *Download__Master.py*
+In all of the entries in the table below, {YYYYRR} represents the 4-digit year and 2-digit round number of the race, whilst {YYYY} represents the 4-digit year of the round.\
+| Dataset Name | Table Name | Description | Created when... |
+| ------------ | ----------- | ----------- | ----------- |
+| F1_Modelling_Raw  | Constructors_{YYYYRR} | Constructors participating in the race | *download_raw_yesno* = 'yes' |
+| F1_Modelling_Raw  | Drivers_{YYYYRR} | Drivers participating in the race | *download_raw_yesno* = 'yes' |
+| F1_Modelling_Raw  | Qualifying_Laptimes_{YYYYRR} | Times in Q1, Q2 and Q3 for each driver | *download_raw_yesno* = 'yes' |
+| F1_Modelling_Raw  | Race_Laptimes_{YYYYRR} | Lap by lap timing of each driver in the race | *download_raw_yesno* = 'yes' |
+| F1_Modelling_Raw  | Race_Pitstops_{YYYYRR} | Lap numbers of pitstops, and how long they took | *download_raw_yesno* = 'yes' |
+| F1_Modelling_Raw  | Rounds_{YYYY} | Details of all the races (i.e. *rounds*) in the year | *download_raw_yesno* = 'yes' |
+| F1_Modelling_Combined  | Combined_{YYYYRR} | Combines all of the above datasets with the manual lookups, that must be uploaded from the *data/manual_lookups* folder into BigQuery before running this. Adds in extra data fields on tyre stints, tyre compounds, and circuit characteristics. This dataset becomes really useful when it comes to the fitting of tyre deg curves on historical data. | *upload_combined_yesno* = 'yes' |
