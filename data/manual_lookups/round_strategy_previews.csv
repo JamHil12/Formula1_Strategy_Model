@@ -1,8 +1,0 @@
-year,round,strategy_preview_url,tyre_deg_url,pit_lane_loss_secs_greenflag,pit_lane_loss_secs_vsc,pit_lane_loss_secs_sc,tyre_deg_secs_lap_soft,tyre_deg_secs_lap_medium,tyre_deg_secs_lap_hard,tyre_onelap_delta_soft,tyre_onelap_delta_medium,tyre_onelap_delta_hard
-2019,12,https://twitter.com/F1Media/status/1157770783973957638,https://twitter.com/F1Media/status/1157768329345556481,20,12,12,0.05,0.02,0,,,
-2019,11,,https://twitter.com/F1Media/status/1155193986832900096,,,,0.2,0.17,0.17,,,
-2019,10,https://twitter.com/F1Media/status/1150119147474509825,https://twitter.com/F1Media/status/1150103724989321216,19,11,11,0.08,0.08,0,,,
-2019,9,https://twitter.com/F1Media/status/1145135662150164480,https://twitter.com/F1Media/status/1145045436186746881,25,17,17,0.07,0.04,0.03,,,
-2019,8,https://twitter.com/F1Media/status/1142505320159354881,https://twitter.com/F1Media/status/1142496215575273480,25,15,15,0.11,0.03,0,,,
-2019,7,https://twitter.com/F1Media/status/1137516150806462467,https://twitter.com/F1Media/status/1137506019859468289,17,9,9,0.25,0.08,0.02,,,
-2019,6,https://twitter.com/F1Media/status/1132370809094397952,https://twitter.com/F1Media/status/1132369813928632321,20,12,12,0.07,0.03,-0.04,0,0.68,0.83

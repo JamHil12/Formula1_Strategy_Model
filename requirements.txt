@@ -30,7 +30,7 @@ jupyterlab==1.2.6
 jupyterlab-server==1.0.6
 kiwisolver==1.1.0
 MarkupSafe==1.1.1
-matplotlib==3.1.1
+matplotlib==3.2.1
 mistune==0.8.4
 nbconvert==5.6.1
 nbformat==5.0.4
@@ -55,6 +55,7 @@ pywinpty==0.5.7
 pyzmq==18.1.1
 requests==2.22.0
 rsa==4.0
+seaborn==0.10.0
 Send2Trash==1.5.0
 six==1.12.0
 terminado==0.8.3
