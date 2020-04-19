@@ -6,7 +6,7 @@ This *download* folder contains the Python code required to get all the historic
 3. Open the file *Download__Master.py*. Edit the parameters to choose a year and a range of round numbers to download/upload, as well as to configure what type of data you want to download/upload. Running this Python code will download all the requested data from the Ergast API, save the results as csv files in the *bigquery_upload* folder, and then upload the datasets into BigQuery.
 
 ## BigQuery tables created by *Download__Master.py*
-In all of the entries in the table below, {YYYYRR} represents the 4-digit year and 2-digit round number of the race, whilst {YYYY} represents the 4-digit year of the round.\
+In all of the entries in the table below, {YYYYRR} represents the 4-digit year and 2-digit round number of the race, whilst {YYYY} represents the 4-digit year of the round.
 | Dataset Name | Table Name | Description | Created when... |
 | ------------ | ----------- | ----------- | ----------- |
 | F1_Modelling_Raw  | Constructors_{YYYYRR} | Constructors participating in the race | *download_raw_yesno* = 'yes' |
