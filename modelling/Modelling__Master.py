@@ -14,13 +14,39 @@ import seaborn as sns
 
 
 # ~~~~~~~~~~~~~ Finding & plotting optimal strategies with known tyre deg variables ~~~~~~~~~~~~~ #
-#k = 0.3
+#laps_complete = 3 # Full racing laps already completed
+#total_race_laps = 52
+#pitstop_time = 24 # Total extra time in seconds to make a pitstop
+#current_tyre_description = 'Soft' # Either 'Soft', 'Medium' or 'Hard'
+#current_tyre_age = 3 # Total laps the current tyre has already done
+#need_to_use_different_tyre = True # Boolean, depending on whether you still need to use a different compound of tyre before the end of the race
+
+## The following parameters will define the shape of the quadratic tyre deg curve
+#tyre_deg_curve = mu.tyre_deg_curve_quadratic
+#k = 0.6
 #d = 0.6
-#optimal_strategy = mu.find_optimum_strategy(3, 52, 24, 'Soft', 3, 'Yes', 2, mu.tyre_deg_curve_quadratic,
-#                      soft_tyre_deg_quadratic = 0.012, soft_tyre_deg_linear = -0.01,
-#                      medium_tyre_pace_deficit = d, medium_tyre_deg_quadratic = 0.012*k, medium_tyre_deg_linear = -0.01*k,
-#                      hard_tyre_pace_deficit = 2*d, hard_tyre_deg_quadratic = 0.012*(k**2), hard_tyre_deg_linear = -0.01*(k**2)
-#                      )
+#soft_tyre_deg_quadratic = 0.012,
+#soft_tyre_deg_linear = -0.01,
+#medium_tyre_pace_deficit = d,
+#medium_tyre_deg_quadratic = 0.012*k,
+#medium_tyre_deg_linear = -0.01*k,
+#hard_tyre_pace_deficit = 2*d,
+#hard_tyre_deg_quadratic = 0.012*(k**2),
+#hard_tyre_deg_linear = -0.01*(k**2)
+
+#max_pitstops = 3 # Here you can choose a maximum number of pitstops. The find_optimium_strategy function has a absolute maximum of 3 that it can handle, and by default this parameter is set to be 3.
+#base_laptime = 76.52 # The race laptime (measured in seconds) from a brand new Soft tyre with 1 lap of fuel remaining. By default, this is 0. (N.B. this parameter only affects the size of the laptimes - the choice of optimal strategy remains the same regardless of this parameter.)
+#fuel_laptime_correction = 0.06 # The improvement in laptime, measured in seconds per lap (assumed to be linear), from decreasing fuel load. This is assuming all other variables (including tyre deg) are constant. By default, this is 0. (N.B. this parameter only affects the size of the laptimes - the choice of optimal strategy remains the same regardless of this parameter.)
+#detailed_logs = True # Boolean, whether or not to return extra detail on where the function is up to in the batching process. Mainly used for diagnostics and/or understanding any processes taking a long time.
+#batch_size = 50000 # Controls the number of potential strategies that are computed over in a single batch. If you have issues with memory, then reduce this batch size.
+
+#optimal_strategy = mu.find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_tyre_description,
+#                                            current_tyre_age, need_to_use_different_tyre, tyre_deg_curve,
+#                                            base_laptime, fuel_laptime_correction, max_pitstops, batch_size, detailed_logs,
+#                                            soft_tyre_deg_quadratic = soft_tyre_deg_quadratic, soft_tyre_deg_linear = soft_tyre_deg_linear,
+#                                            medium_tyre_pace_deficit = medium_tyre_pace_deficit, medium_tyre_deg_quadratic = medium_tyre_deg_quadratic, medium_tyre_deg_linear = medium_tyre_deg_linear,
+#                                            hard_tyre_pace_deficit = hard_tyre_pace_deficit, hard_tyre_deg_quadratic = hard_tyre_deg_quadratic, hard_tyre_deg_linear = hard_tyre_deg_linear
+#                                           )
 #for i in range(0,len(optimal_strategy.index)):
 #    results_df = pd.DataFrame({'lap_number': optimal_strategy.iloc[i]['lap_number_list'],
 #                              'tyre_stint_number': optimal_strategy.iloc[i]['tyre_stint_number_list'],
@@ -38,11 +64,19 @@ import seaborn as sns
 #pitstop_time = 24
 #current_tyre_description = 'Soft'
 #current_tyre_age = 3
-#need_to_use_different_tyre = 'Yes'
-## Parameter 1 will be called 'k' later, and is the multiplicative factor by which each harder step of tyre compound has less degradation.
-#param1_range = np.arange(0.1,0.2,0.01)
-## Parameter 2 will be called 'd' later, and is the difference in seconds per lap between each step of tyre compound, without any degradation factor.
-#param2_range = np.arange(0.8,1.3,0.1)
+#need_to_use_different_tyre = True
+
+#max_pitstops = 2
+#base_laptime = 76.52
+#fuel_laptime_correction = 0.06
+#detailed_logs = False
+#batch_size = 50000
+
+## The following parameters will define the shape of the quadratic tyre deg curve
+#tyre_deg_curve = mu.tyre_deg_curve_quadratic
+#param1_range = np.arange(0.1, 0.2, 0.01) # Parameter 1 will be called 'k' later, and is the multiplicative factor by which each harder step of tyre compound has less degradation.
+#param2_range = np.arange(0.8, 1.3, 0.1) # Parameter 2 will be called 'd' later, and is the difference in seconds per lap between each step of tyre compound, without any degradation factor.
+
 ## Cross join to get all the possible combinations of parameters
 #parameter_grid = np.transpose([np.tile(param1_range, len(param2_range)), np.repeat(param2_range, len(param1_range))])
 #optimal_number_pitstops = []
@@ -53,8 +87,9 @@ import seaborn as sns
 #    k = row[0]
 #    d = row[1]
 #    results_df = mu.find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_tyre_description,
-#                                          current_tyre_age, need_to_use_different_tyre, 2, mu.tyre_deg_curve_quadratic,
-#                                          soft_tyre_deg_quadratic=0.012, soft_tyre_deg_linear=-0.01,
+#                                          current_tyre_age, need_to_use_different_tyre, tyre_deg_curve,
+#                                          base_laptime, fuel_laptime_correction, max_pitstops, batch_size, detailed_logs,
+#                                          soft_tyre_deg_quadratic = 0.012, soft_tyre_deg_linear = -0.01,
 #                                          medium_tyre_pace_deficit = d, medium_tyre_deg_quadratic = 0.012*k, medium_tyre_deg_linear = -0.01*k,
 #                                          hard_tyre_pace_deficit = 2*d, hard_tyre_deg_quadratic = 0.012*(k**2), hard_tyre_deg_linear = -0.01*(k**2))
 #    if results_df["pitstop_1_lap"][0] == -1:
@@ -78,6 +113,6 @@ import seaborn as sns
 #sns.heatmap(pivot_tab, annot = annotations, annot_kws={"size": 7}, fmt = '', cmap = 'Blues', cbar = False, linewidths=.3)
 #plt.xlabel("d")
 #plt.ylabel("k")
-#plt.title("Optimal strategy for varying tyre parameters")
+#plt.title("Optimal strategy for various tyre parameters")
 #plt.show()
 
