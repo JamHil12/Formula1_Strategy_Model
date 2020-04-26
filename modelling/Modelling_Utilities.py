@@ -209,16 +209,20 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
 
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def download_laptimes(year, round_num, driver, key_path = "credentials/f1modeller_bq_credentials.json"):
+def download_laptimes(year, round_num, driver = 'all drivers', key_path = "credentials/f1modeller_bq_credentials.json"):
     '''
     Returns a dataframe with race data for the specified year, round number and driver.
     :param year: an integer, the year of the race you want to download data for
     :param round_num: an integer, the round number of the race you want to download data for
-    :param driver: a string, the name of the driver you want to download data for
+    :param driver: a string, the name of the driver you want to download data for. By default, downloads all drivers.
     :param key_path: a string, optional. Defines the path of the BigQuery json authenticaion key, to allow access for downloading.
     :return:
     '''
 
+    if driver == 'all drivers':
+        driver_query_string = ''
+    else:
+        driver_query_string = """AND LOWER(driver_name) = LOWER('{0}')""".format(driver)
     credentials = service_account.Credentials.from_service_account_file(key_path)
     bigquery_client = bigquery.Client(credentials=credentials, project=credentials.project_id)
     query_job = bigquery_client.query("""
@@ -226,14 +230,14 @@ def download_laptimes(year, round_num, driver, key_path = "credentials/f1modelle
                     WHERE
                     year = {0}
                     AND round = {1}
-                    AND LOWER(driver_name) = LOWER('{2}')
-                    """.format(year, round_num, driver))
+                    {2}
+                    """.format(year, round_num, driver_query_string))
     return query_job.to_dataframe()
 
 
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def plot_laptimes(results_df, title = "Laptimes Chart"):
+def plot_laptimes(results_df, title = "Lap Times Chart"):
     '''
     Returns a plot of the race data provided in the input results_df.
     :param results_df: a Pandas dataframe, containing the data you want to plot. It must have the following columns: lap_number (e.g. 5), tyre_stint_number (e.g. 1), tyre_description (e.g. "Hard"), tyre_status (e.g. "New"), lap_time (e.g. 83.642).
@@ -285,7 +289,7 @@ def plot_laptimes(results_df, title = "Laptimes Chart"):
         axis_raw_filtered = axis_raw[axis_raw['tyre_stint_number'] == stint].sort_values(by=['lap_number'])
         x_axis = axis_raw_filtered['lap_number']
         y_axis = axis_raw_filtered['lap_time']
-        ax.plot(x_axis,y_axis, label = label_str,
+        ax.plot(x_axis, y_axis, label = label_str,
                 linestyle = line_plot,
                 color = colour_plot)
     plt.title(title)

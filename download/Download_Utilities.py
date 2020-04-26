@@ -604,8 +604,8 @@ def upload_combined(year, round_start, round_end, key_path):
         bigquery.SchemaField("perc_race_completed", "FLOAT"),
         bigquery.SchemaField("race_position", "INTEGER"),
         bigquery.SchemaField("lap_time", "FLOAT"),
-        bigquery.SchemaField("pitstop_number", "FLOAT"),
-        bigquery.SchemaField("pitstop_duration", "FLOAT"),
+        bigquery.SchemaField("pitstop_number_inlap", "FLOAT"),
+        bigquery.SchemaField("pitstop_number_outlap", "FLOAT"),
         bigquery.SchemaField("circuit_tyre_stress_rating", "INTEGER"),
         bigquery.SchemaField("circuit_asphalt_abrasion_rating", "INTEGER"),
         bigquery.SchemaField("circuit_asphalt_grip_rating", "INTEGER"),
@@ -648,8 +648,8 @@ def upload_combined(year, round_start, round_end, key_path):
  round,
  driverId,
  CASE
- WHEN q1 < q2 and q1 < q3 THEN q1
- WHEN q2 < q3 THEN q2
+ WHEN ((q2 IS NULL AND q3 IS NULL) OR (q3 IS NULL AND q1 < q2) OR (q1 < q2 AND q1 < q3)) THEN q1
+ WHEN (q2 IS NOT NULL AND (q3 IS NULL OR q2 < q3)) THEN q2
  ELSE q3
  END as best_qual_time
 
@@ -742,8 +742,8 @@ SELECT
             CAST(l.lap as float64) / tl.race_total_laps as perc_race_completed,
             l.position as race_position,
             l.time as lap_time,
-            rp.stop as pitstop_number,
-            rp.duration as pitstop_duration,
+            rp.stop as pitstop_number_inlap,
+            rp2.stop as pitstop_number_outlap,
             cr.tyre_stress as circuit_tyre_stress_rating,
             cr.asphalt_abrasion as circuit_asphalt_abrasion_rating,
             cr.asphalt_grip as circuit_asphalt_grip_rating,
@@ -773,6 +773,11 @@ SELECT
               AND l.round = rp.round
               AND l.driverId = rp.driverId
               AND l.lap = rp.lap
+            LEFT JOIN `F1_Modelling_Raw.Race_Pitstops_*` rp2
+              ON l.year = rp2.year
+              AND l.round = rp2.round
+              AND l.driverId = rp2.driverId
+              AND l.lap - 1 = rp2.lap
             LEFT JOIN qual_time qt
               ON l.year = qt.year
               AND l.round = qt.round
