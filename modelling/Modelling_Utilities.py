@@ -49,6 +49,37 @@ def tyre_deg_curve_quadratic(tyre_age, tyre_description, soft_tyre_deg_quadratic
 
     return a * (tyre_age ** 2) + b * tyre_age + c
 
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def tyre_deg_curve_power(tyre_age, tyre_description, omega, soft_tyre_deg_coeff, medium_tyre_pace_deficit,
+                         medium_tyre_deg_coeff, hard_tyre_pace_deficit, hard_tyre_deg_coeff):
+    '''
+    Outputs a numpy array, converting the input tyre ages and descriptions into tyre degradation-adjusted laptime deltas.
+    Model: a*(t^omega) + c, where t is tyre age in laps, and a and c depend on the tyre compound chosen
+    :param tyre_age: numpy array, the range of tyre ages to be evaluated
+    :param tyre_description: numpy array, with the same length as tyre_age, with elements of either "Soft", "Medium", "Hard"
+    :param omega: positive float at least 1, defining the power curve
+    :param soft_tyre_deg_coeff: float, the coefficient 'a' of t^omega in "laptime tyre effect = at^omega + c", where t is the age of a soft tyre in laps
+    :param medium_tyre_pace_deficit: float, the positive raw amount of time (in seconds) a medium tyre is slower than the soft tyre due to lower grip (fuel & degradation corrected)
+    :param medium_tyre_deg_coeff: float, the coefficient 'a' of t^omega in "laptime tyre effect = at^omega + c", where t is the age of a medium tyre in laps
+    :param hard_tyre_pace_deficit: float, the positive raw amount of time (in seconds) a hard tyre is slower than the soft tyre due to lower grip (fuel & degradation corrected)
+    :param hard_tyre_deg_coeff: float, the coefficient 'a' of t^omega in "laptime tyre effect = at^omega + c", where t is the age of a hard tyre in laps
+    :return:
+    '''
+
+    def tyre_deg_generator_a(l):
+        # Here, l should be a numpy array of strings
+        return (soft_tyre_deg_coeff * (l == 'Soft')) + (medium_tyre_deg_coeff * (l == 'Medium')) + (
+                    hard_tyre_deg_coeff * (l == 'Hard'))
+
+    def tyre_deg_generator_c(l):
+        # Here, l should be a numpy array of strings
+        return (medium_tyre_pace_deficit * (l == 'Medium')) + (hard_tyre_pace_deficit * (l == 'Hard'))
+
+    a = tyre_deg_generator_a(tyre_description)
+    c = tyre_deg_generator_c(tyre_description)
+
+    return a * (tyre_age ** omega) + c
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

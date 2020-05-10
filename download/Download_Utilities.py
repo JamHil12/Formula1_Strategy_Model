@@ -126,7 +126,7 @@ def download_race_pitstop(year, round_start, round_end, key_path):
         ## TRY TO QUERY THE ERGAST API, AND OBTAIN THE JSON RESULTS
         print('Round {0}: Attempting to request Pitstops json from Ergast API'.format(round_num))
         try:
-            response = rq.get('http://ergast.com/api/f1/{0}/{1}/pitstops.json'.format(year,round_num))
+            response = rq.get('http://ergast.com/api/f1/{0}/{1}/pitstops.json?limit=100'.format(year,round_num))
         except:
             print('Round {0}: Error getting response from Ergast API - Pitstops'.format(round_num))
             sys.exit()
