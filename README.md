@@ -13,7 +13,7 @@ You will need:\
 To run any Jupyter notebooks, type 'jupyter lab' in the command line once the Python virtual environment is activated, to launch the JupyterLab interface.
 
 ## How to get started
-1. Create datasets in your newly BigQuery project called *"Custom_Lookups"*, *"F1_Modelling_Raw"* and *"F1_Modelling_Combined"*, which will store all the data you need for this model.
+1. Create datasets in your new BigQuery project called *"Custom_Lookups"*, *"F1_Modelling_Raw"* and *"F1_Modelling_Combined"*, which will store all the data you need for this model.
 2. Create a service account which has access to the BigQuery project, and store the json file for the service account's credentials in the *"credentials"* folder(s).  As of April 2020, the area to create and manage service accounts is accessible via 'IAM & Admin' -> 'Service Accounts' in the GCP user interface.
 3. Go to the *download* folder and follow the instructions in the README.md file to gather historical F1 Grand Prix data
 4. Go to the *modelling* folder and follow the instructions in the README.md file to run strategy optimisation models
