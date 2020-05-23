@@ -26,5 +26,5 @@ To run any Jupyter notebooks, type 'jupyter lab' in the command line once the Py
 
 ## Permissions for personal or business use
 Whilst appreciating that this repository is public, please ask the original developer's permission (user: JamHil12) before:
-* copying this repository, either for personal or for business use.
+* using this repository without proper attribution, either for personal or for business use
 * editing the files in this repository
