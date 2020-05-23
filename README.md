@@ -1,6 +1,6 @@
 # Formula 1 Strategy Model
-### *Developer: Jamie Hilton*
-This was a 'weekend project' done in Jamie Hilton's spare time, to devise a simple model using Python to try to optimise a Formula 1 race strategy.
+### *Developer: Jamie Hilton (user JamHil12)*
+This was a 'weekend project' done in JamHil12's spare time, to devise a simple model using Python to try to optimise a Formula 1 race strategy.
 
 ## Acknowledgements
 This project relies on the historial F1 datasets that are publically available via the Ergast API - for documentation please refer to http://ergast.com/mrd/. \
@@ -23,3 +23,8 @@ To run any Jupyter notebooks, type 'jupyter lab' in the command line once the Py
 | ------------ | ----------- |
 | download | In here are all the Python files needed to call the Ergast API and store the results into Google BigQuery. |
 | modelling | In here are all the Python files needed to call the optimal strategy models, plot laptimes and perform grid search optimisation across different modelling parameters. |
+
+## Permissions for personal or business use
+Whilst appreciating that this repository is public, please ask the original developer's permission (user: JamHil12) before:
+* copying this repository, either for personal or for business use.
+* editing the files in this repository
