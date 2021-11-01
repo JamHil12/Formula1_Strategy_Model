@@ -1,4 +1,5 @@
-This folder contains manually-made csv lookups, e.g. of tyre choices made by drivers from actual F1 Grand Prix. This information is sourced from Pirelli's website, e.g. https://racingspot.pirelli.com/global/en-ww/gp-hungary.
+The tools/data_lookups folder contains manually-made csv lookups that must be updated before running the tool.
+For example, the tyre choices made by drivers during rach race must be defined. This information is sourced from Pirelli's website, e.g. https://racingspot.pirelli.com/global/en-ww/gp-hungary.
 
 These csv files should be uploaded manually to the BigQuery project, using the naming convention and schemas in the table below. These BigQuery tables are what allow the 'combined' dataset to be created through the main download code; without these manual lookups we don't have any tyre usage data to combine with the Ergast API data.
 

@@ -1,1 +1,0 @@
-This folder is used to save csv files when downloading data from the Ergast API. Please do not change its location or name.

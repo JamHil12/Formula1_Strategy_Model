@@ -1,9 +1,9 @@
-This *download* folder contains the Python code required to get all the historical F1 Grand Prix information required from the Ergast API (http://ergast.com/mrd/), and upload it to your BigQuery project.
+Use the Download_Master.py file in the [src](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/src) folder to download historical F1 timing data from the [Ergast API](http://ergast.com/mrd/), and upload it to your BigQuery project.
 
 ## Instructions
-1. In the *credentials* folder, paste in a json file from GCP for BigQuery authentication into your project.
-2. Follow the instructions in the README.md file of the *data/manual_lookups* folder to create manual lookups and upload them to your BigQuery project
-3. Open the file *Download__Master.py*. Edit the parameters to choose a year and a range of round numbers to download/upload, as well as to configure what type of data you want to download/upload. Running this Python code will download all the requested data from the Ergast API, save the results as csv files in the *bigquery_upload* folder, and then upload the datasets into BigQuery.
+1. Follow and complete all the 'Getting Started' instructions in the main project README file.
+2. Follow the instructions in the data_lookups.md documentation file in the [doc](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/docs) folder, updating the lookups relevant to the race of interest and uploading them to your BigQuery project.
+3. Open the file *download__master.py* in the [src](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/src) folder. Edit the input parameters to choose a year and a range of round numbers to download. Running the code will download all the requested data from the Ergast API, save the results as csv files in the *bigquery_upload* folder, and then upload the datasets into BigQuery.
 
 ## BigQuery tables created by *Download__Master.py*
 In all of the entries in the table below, {YYYYRR} represents the 4-digit year and 2-digit round number of the race, whilst {YYYY} represents the 4-digit year of the round.
