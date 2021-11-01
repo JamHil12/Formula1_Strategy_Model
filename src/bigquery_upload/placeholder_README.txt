@@ -1,0 +1,1 @@
+Please delete this file before running a download of timing data from the Ergast API.

@@ -1,4 +1,4 @@
-It is recommended to familiarise yourself with the Jupyter notebooks in the [build](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/build) folder first.
+Please familiarise yourself with the Jupyter notebooks in the [build](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/build) folder first.
 Those notebooks visually demonstrate what each function defined in the Python files does.
 
 | Folder | File Name | Description |

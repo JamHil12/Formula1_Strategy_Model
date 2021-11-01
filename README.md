@@ -7,7 +7,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/JamHil12/Formula1_Strategy_Model">
-    <img src="docs/images/logo.png" alt="Logo" width="80" height="80">
+    <img src="docs/images/logo.png" alt="Logo" width="306" height="114">
   </a>
 
 <h3 align="center">Formula1_Strategy_Model</h3>
@@ -61,6 +61,7 @@
 A set of software tools to visualise the optimal race strategy for a single car, including:
 * How the optimal strategy varies according to changes in tyre degradation characteristics.
 * How each tyre compound compared in their degradation characteristics for historical F1 races.
+
 Note that the real-world optimisation of race strategy in F1 is much more complex, due to the interactions between competitors. A simplified approach is adopted here, with a focus on software development.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -111,7 +112,7 @@ You will need:
    jupyter notebook
    ```
 
-For more information on how to update lookups, download timing data and run the strategy models, please refer to the [Documentation.](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/docs)_
+For more information on how to update lookups, download timing data and run the strategy models, please refer to the [Documentation.](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/docs)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -121,14 +122,16 @@ For more information on how to update lookups, download timing data and run the 
 ## Usage
 
 * Parametrise the tyre degradation rate, and the pace advantage between compounds. Perform a parameter sweep to visualise the decision boundary between different optimal strategy choices.
-  e.g. in the screenshot below, parameters 'k' and 'd' control the degradation rate and pace advantage between compounds, respectively, for an assumed quadratic lap time degradation curve.
-  [docs/images/parameter_sweep.png]
+  
+  [![Parameter Sweep Screen Shot][parameter-sweep-screenshot]](https://github.com/JamHil12/Formula1_Strategy_Model)
+  
+  In the screenshot above, parameters 'k' and 'd' control the degradation rate and pace advantage between compounds, respectively.
 
 * Fit lap time degradation curves to historical F1 race timing data, including (but not limited to) a quadratic fit.
 
 * Estimate the the fuel effect on lap time, independently of tyre wear.
 
-_For a full demonstration, please refer to the Jupyter notebooks in the [build](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/build) folder.
+For a full demonstration, please refer to the Jupyter notebooks in the [build](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/build) folder.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -177,3 +180,4 @@ Project Link: [https://github.com/JamHil12/Formula1_Strategy_Model](https://gith
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/jamie-hilton-464493104
 [product-screenshot]: docs/images/deg_curves_by_compound.png
+[product-sweep-screenshot]: docs/images/parameter_sweep.png

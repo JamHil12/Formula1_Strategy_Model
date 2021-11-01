@@ -1,7 +1,7 @@
-The tools/data_lookups folder contains manually-made csv lookups that must be updated before running the tool.
+The [data_lookups](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/tools/data_lookups) folder contains manually-made csv lookups that must be updated before running the tool.
 For example, the tyre choices made by drivers during rach race must be defined. This information is sourced from Pirelli's website, e.g. https://racingspot.pirelli.com/global/en-ww/gp-hungary.
 
-These csv files should be uploaded manually to the BigQuery project, using the naming convention and schemas in the table below. These BigQuery tables are what allow the 'combined' dataset to be created through the main download code; without these manual lookups we don't have any tyre usage data to combine with the Ergast API data.
+These csv files should be uploaded manually to the BigQuery project, using the naming convention and schemas in the table below. These BigQuery tables are what allow the 'combined' dataset to be created through the main download code. Without these manual lookups, there is no tyre usage data to combine with the Ergast API timing data.
 
 In all of the entries in the table below, {YYYYRR} is replaced by the 4-digit year and 2-digit round number of the race for which the data is for.
 | Dataset Name | Table Name | Description | Table Schema |

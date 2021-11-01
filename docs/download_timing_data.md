@@ -5,7 +5,7 @@ Use the Download_Master.py file in the [src](https://github.com/JamHil12/Formula
 2. Follow the instructions in the data_lookups.md documentation file in the [doc](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/docs) folder, updating the lookups relevant to the race of interest and uploading them to your BigQuery project.
 3. Open the file *download__master.py* in the [src](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/src) folder. Edit the input parameters to choose a year and a range of round numbers to download. Running the code will download all the requested data from the Ergast API, save the results as csv files in the *bigquery_upload* folder, and then upload the datasets into BigQuery.
 
-## BigQuery tables created by *Download__Master.py*
+## BigQuery tables created by *download__master.py*
 In all of the entries in the table below, {YYYYRR} represents the 4-digit year and 2-digit round number of the race, whilst {YYYY} represents the 4-digit year of the round.
 | Dataset Name | Table Name | Description | Created when... |
 | ------------ | ----------- | ----------- | ----------- |
