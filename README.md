@@ -123,7 +123,7 @@ For more information on how to update lookups, download timing data and run the 
 
 * Parametrise the tyre degradation rate, and the pace advantage between compounds. Perform a parameter sweep to visualise the decision boundary between different optimal strategy choices.
   
-  [![Parameter Sweep Screen Shot][parameter-sweep-screenshot]](https://github.com/JamHil12/Formula1_Strategy_Model)
+  ![Parameter Sweep Screenshot](https://github.com/JamHil12/Formula1_Strategy_Model/blob/master/docs/images/parameter_sweep.png?raw=true)
   
   In the screenshot above, parameters 'k' and 'd' control the degradation rate and pace advantage between compounds, respectively.
 
@@ -180,4 +180,3 @@ Project Link: [https://github.com/JamHil12/Formula1_Strategy_Model](https://gith
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/jamie-hilton-464493104
 [product-screenshot]: docs/images/deg_curves_by_compound.png
-[product-sweep-screenshot]: docs/images/parameter_sweep.png
