@@ -1,15 +1,13 @@
-###### Modelling_Utilities.py
+# modelling_utilities.py
+# Defines various helper functions that create assumed tyre degradation curves and find the optimal race strategy.
 
 import pandas as pd
 from google.cloud import bigquery
 from google.oauth2 import service_account
-import sys
-import os
 import matplotlib.pyplot as plt
 import numpy as np
-import itertools as itt
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def tyre_deg_curve_quadratic(tyre_age, tyre_description, soft_tyre_deg_quadratic, soft_tyre_deg_linear, medium_tyre_pace_deficit,
                              medium_tyre_deg_quadratic, medium_tyre_deg_linear, hard_tyre_pace_deficit, hard_tyre_deg_quadratic,
                              hard_tyre_deg_linear):
@@ -29,18 +27,16 @@ def tyre_deg_curve_quadratic(tyre_age, tyre_description, soft_tyre_deg_quadratic
     :return:
     '''
 
+    # In the following functions, l will be a numpy array of strings
     def tyre_deg_generator_a(l):
-        # Here, l should be a numpy array of strings
         return (soft_tyre_deg_quadratic * (l == 'Soft')) + (medium_tyre_deg_quadratic * (l == 'Medium')) + (
                     hard_tyre_deg_quadratic * (l == 'Hard'))
 
     def tyre_deg_generator_b(l):
-        # Here, l should be a numpy array of strings
         return (soft_tyre_deg_linear * (l == 'Soft')) + (medium_tyre_deg_linear * (l == 'Medium')) + (
                     hard_tyre_deg_linear * (l == 'Hard'))
 
     def tyre_deg_generator_c(l):
-        # Here, l should be a numpy array of strings
         return (medium_tyre_pace_deficit * (l == 'Medium')) + (hard_tyre_pace_deficit * (l == 'Hard'))
 
     a = tyre_deg_generator_a(tyre_description)
@@ -49,7 +45,7 @@ def tyre_deg_curve_quadratic(tyre_age, tyre_description, soft_tyre_deg_quadratic
 
     return a * (tyre_age ** 2) + b * tyre_age + c
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 def tyre_deg_curve_power(tyre_age, tyre_description, omega, soft_tyre_deg_coeff, medium_tyre_pace_deficit,
                          medium_tyre_deg_coeff, hard_tyre_pace_deficit, hard_tyre_deg_coeff):
@@ -67,13 +63,12 @@ def tyre_deg_curve_power(tyre_age, tyre_description, omega, soft_tyre_deg_coeff,
     :return:
     '''
 
+    # In the following functions, l will be a numpy array of strings
     def tyre_deg_generator_a(l):
-        # Here, l should be a numpy array of strings
         return (soft_tyre_deg_coeff * (l == 'Soft')) + (medium_tyre_deg_coeff * (l == 'Medium')) + (
                     hard_tyre_deg_coeff * (l == 'Hard'))
 
     def tyre_deg_generator_c(l):
-        # Here, l should be a numpy array of strings
         return (medium_tyre_pace_deficit * (l == 'Medium')) + (hard_tyre_pace_deficit * (l == 'Hard'))
 
     a = tyre_deg_generator_a(tyre_description)
@@ -81,11 +76,11 @@ def tyre_deg_curve_power(tyre_age, tyre_description, omega, soft_tyre_deg_coeff,
 
     return a * (tyre_age ** omega) + c
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_tyre_description, current_tyre_age,
-                          need_to_use_different_tyre, tyre_deg_curve, base_laptime = 0, fuel_laptime_correction = 0,
-                          max_pitstops = 3, batch_size = 50000, detailed_logs = False, **kwargs):
+                          need_to_use_different_tyre, tyre_deg_curve, base_laptime=0, fuel_laptime_correction=0,
+                          max_pitstops=3, batch_size=50000, detailed_logs=False, **kwargs):
     '''
     Outputs a dataframe with the optimal strategy, based on input race parameters.
     Method: Grid search of all possible pitstop lap and tyre choice combinations for the remaining race distance
@@ -110,11 +105,11 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
     if max_pitstops > 3:
         print('**WARNING**: This function can only optimise to a maximum of 3 pitstops. Therefore, resetting max_pitstops to be 3.')
         max_pitstops = 3
-    elif (max_pitstops < 1 & need_to_use_different_tyre == True):
+    elif (max_pitstops < 1 & need_to_use_different_tyre):
         print('**WARNING**: Incompatible inputs; user has specified that a different tyre needs to be used before the end of the race, but max_pitstops does not allow for this. Therefore, resetting max_pitstops to be 1.')
         max_pitstops = 1
 
-    #Define the shape of the tyre drop-off function
+    # Define the shape of the lap time degradation function
     def generate_laptime(t, td, p, l):
         '''
         :param t: a numpy array of tyre ages
@@ -130,7 +125,7 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
 
     tyres = ['Soft', 'Medium', 'Hard']
     pitlaps_staging = list(range(laps_complete + 1,total_race_laps + 1))
-    pitlaps_staging.append(-1) #-1 represents no pitstop
+    pitlaps_staging.append(-1) # -1 represents no pit stop
     if max_pitstops == 0:
         pit_lap_1 = [-1]
         pit_lap_2 = [-1]
@@ -148,7 +143,7 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
         pit_lap_2 = pitlaps_staging
         pit_lap_3 = pitlaps_staging
 
-    index = pd.MultiIndex.from_product([pit_lap_1,tyres,pit_lap_2,tyres,pit_lap_3,tyres], names=["pitstop_1_lap", "pitstop_1_tyre", "pitstop_2_lap", "pitstop_2_tyre", "pitstop_3_lap", "pitstop_3_tyre"])
+    index = pd.MultiIndex.from_product([pit_lap_1, tyres, pit_lap_2, tyres, pit_lap_3, tyres], names=["pitstop_1_lap", "pitstop_1_tyre", "pitstop_2_lap", "pitstop_2_tyre", "pitstop_3_lap", "pitstop_3_tyre"])
     pitstop_df = pd.DataFrame(index=index).reset_index()
     pitstop_df["pitstop_0_lap"] = laps_complete
     pitstop_df["pitstop_0_tyre"] = current_tyre_description
@@ -163,13 +158,19 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
     t1 = pitstop_df["pitstop_1_tyre"].to_numpy()
     t2 = pitstop_df["pitstop_2_tyre"].to_numpy()
     t3 = pitstop_df["pitstop_3_tyre"].to_numpy()
-    if need_to_use_different_tyre == True:
-        x = (p1 > -1) & ((((p3 > p2) & (p2 > p1)) & ~((t3 == t2) & (t2 == t1) & (t1 == t0))) | (((p3 == -1) & (p2 > p1)) & ~((t2 == t1) & (t1 == t0))) | (((p2 == -1) & (p3 == -1)) & ~(t1 == t0)))
+    if need_to_use_different_tyre:
+        cond1 = ((p3 > p2) & (p2 > p1)) & ~((t3 == t2) & (t2 == t1) & (t1 == t0))
+        cond2 = ((p3 == -1) & (p2 > p1)) & ~((t2 == t1) & (t1 == t0))
+        cond3 = ((p2 == -1) & (p3 == -1)) & ~(t1 == t0)
+        msk = (p1 > -1) & (cond1 | cond2 | cond3)
     else:
-        x = ( ((p1 > -1) & (p3 > p2) & (p2 > p1)) | ((p3 == -1) & (p1 > -1) & (p2 > p1)) | ((p3 == -1) & (p2 == -1)) )
-    pitstop_df = pitstop_df[x].reset_index()
+        cond1 = (p1 > -1) & (p3 > p2) & (p2 > p1)
+        cond2 = (p3 == -1) & (p1 > -1) & (p2 > p1)
+        cond3 = (p3 == -1) & (p2 == -1)
+        msk = cond1 | cond2 | cond3
+    pitstop_df = pitstop_df[msk].reset_index()
 
-    pitstop_df = pitstop_df[["pitstop_0_lap","pitstop_0_tyre","pitstop_0_tyre_age","pitstop_1_lap","pitstop_1_tyre","pitstop_2_lap","pitstop_2_tyre","pitstop_3_lap","pitstop_3_tyre"]]
+    pitstop_df = pitstop_df[["pitstop_0_lap", "pitstop_0_tyre", "pitstop_0_tyre_age", "pitstop_1_lap", "pitstop_1_tyre", "pitstop_2_lap", "pitstop_2_tyre", "pitstop_3_lap", "pitstop_3_tyre"]]
     pitstop_df["pitstop_1_tyre"].loc[pitstop_df['pitstop_1_lap'] == -1] = "No pitstop"
     pitstop_df["pitstop_2_tyre"].loc[pitstop_df['pitstop_2_lap'] == -1] = "No pitstop"
     pitstop_df["pitstop_3_tyre"].loc[pitstop_df['pitstop_3_lap'] == -1] = "No pitstop"
@@ -181,7 +182,7 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
     for batch_number, group_df in pitstop_df.groupby(np.arange(len(pitstop_df)) // batch_size):
         laps_list = []
         batch_df = group_df.reset_index()
-        if detailed_logs == True:
+        if detailed_logs:
             print('Attempting optimisation with batch number = {0}, df size {1}'.format(batch_number, batch_df.shape[0]))
 
         for i in range(0, len(batch_df['pitstop_0_lap'].to_numpy())):
@@ -197,22 +198,31 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
         pta0 = batch_df["pitstop_0_tyre_age"].to_numpy()
         l = np.transpose(np.array(laps_list))
 
-        # ~~~~~Lap Number~~~~~
+        # Lap Number
         batch_df['lap_number_list'] = laps_list
-        # ~~~~~Stint Number~~~~~
-        stint = 1*((l <= pl1)|(pl1 == -1)) + 2*((pl1 > -1) & (l > pl1) & ((l <= pl2)|(pl2 == -1))) + 3*((pl2 > -1) & (l > pl2) & ((l <= pl3)|(pl3 == -1))) + 4*((pl3 > -1) & (l > pl3))
+
+        # Stint Number
+        cond1 = (l <= pl1) | (pl1 == -1)
+        cond2 = (pl1 > -1) & (l > pl1) & ((l <= pl2) | (pl2 == -1))
+        cond3 = (pl2 > -1) & (l > pl2) & ((l <= pl3) | (pl3 == -1))
+        cond4 = (pl3 > -1) & (l > pl3)
+        stint = 1*cond1 + 2*cond2 + 3*cond3 + 4*cond4
         batch_df['tyre_stint_number_list'] = list(np.transpose(stint))
-        # ~~~~~Tyre Ages~~~~~
+
+        # Tyre Ages
         ta = l - ((stint == 1)*(l[0] - pta0)) - ((stint == 2)*(1 + pl1)) - ((stint == 3)*(1 + pl2)) - ((stint == 4)*(1 + pl3))
         batch_df['tyre_age_list'] = list(np.transpose(ta))
-        # ~~~~~Tyre Descriptions~~~~~
+
+        # Tyre Descriptions
         td = (pt0*(stint == 1)) + (pt1*(stint == 2)) + (pt2*(stint == 3)) + (pt3*(stint == 4))
         batch_df['tyre_description_list'] = list(np.transpose(td))
-        # ~~~~~Tyre Statuses~~~~~
+
+        # Tyre Statuses
         tstat = 1 * ((stint == 1) & (pta0 > 0)) + 2 * (~((stint == 1) & (pta0 > 0)))
         tstat = np.where(tstat == 1, 'Used', 'New')
         batch_df['tyre_status_list'] = list(np.transpose(tstat))
-        # ~~~~~Pitstop Laps~~~~~
+
+        # Pitstop Laps
         pitstop_laps = 1*((l == pl1) | (l == pl2) | (l == pl3))
 
         stint_time_total = generate_laptime(ta, td, pitstop_laps, l)
@@ -230,7 +240,7 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
         else:
             optimal_strategy = optimal_strategy.append(optimal_strategy_batch)
 
-        if detailed_logs == True:
+        if detailed_logs:
             print('Completed optimisation with batch number = {0}'.format(batch_number))
 
     optimal_strategy.reset_index()
@@ -239,8 +249,7 @@ def find_optimum_strategy(laps_complete, total_race_laps, pitstop_time, current_
 
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def download_laptimes(year, round_num, driver = 'all drivers', key_path = "credentials/f1modeller_bq_credentials.json"):
+def download_laptimes(year, round_num, driver='all drivers', key_path='credentials/f1modeller_bq_credentials.json'):
     '''
     Returns a dataframe with race data for the specified year, round number and driver.
     :param year: an integer, the year of the race you want to download data for
@@ -267,8 +276,7 @@ def download_laptimes(year, round_num, driver = 'all drivers', key_path = "crede
 
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def plot_laptimes(results_df, title = "Lap Times Chart"):
+def plot_laptimes(results_df, title='Lap Times Chart'):
     '''
     Returns a plot of the race data provided in the input results_df.
     :param results_df: a Pandas dataframe, containing the data you want to plot. It must have the following columns: lap_number (e.g. 5), tyre_stint_number (e.g. 1), tyre_description (e.g. "Hard"), tyre_status (e.g. "New"), lap_time (e.g. 83.642).
@@ -276,9 +284,11 @@ def plot_laptimes(results_df, title = "Lap Times Chart"):
     :return:
     '''
     fig, ax = plt.subplots()
-    ## Define the data to be plotted
+
+    # Define the data to be plotted
     axis_raw = results_df.sort_values(by=['lap_number'])
-    ## Define the colour scheme & line style
+
+    # Define the colour scheme & line style
     tyres = axis_raw['tyre_description']
     colours = []
     for t in tyres:
@@ -307,7 +317,7 @@ def plot_laptimes(results_df, title = "Lap Times Chart"):
         line_style.append(line)
     axis_raw['colour_scheme'] = colours
     axis_raw['line_style'] = line_style
-    axis_raw_grouped = axis_raw.groupby(['tyre_stint_number','tyre_description','tyre_status','colour_scheme',
+    axis_raw_grouped = axis_raw.groupby(['tyre_stint_number', 'tyre_description', 'tyre_status', 'colour_scheme',
                                          'line_style']).size().reset_index()
     for index, row in axis_raw_grouped.iterrows():
         stint = row['tyre_stint_number']
@@ -316,7 +326,7 @@ def plot_laptimes(results_df, title = "Lap Times Chart"):
         tyre_description = row['tyre_description']
         tyre_status = row['tyre_status']
         label_str = tyre_status + ' ' + tyre_description
-        ## Plot
+
         axis_raw_filtered = axis_raw[axis_raw['tyre_stint_number'] == stint].sort_values(by=['lap_number'])
         x_axis = axis_raw_filtered['lap_number']
         y_axis = axis_raw_filtered['lap_time']
@@ -328,6 +338,6 @@ def plot_laptimes(results_df, title = "Lap Times Chart"):
     plt.ylabel("Lap Time (seconds)")
     plt.legend()
     plt.minorticks_on()
-    plt.grid(which = 'major', linestyle = ':', linewidth = '0.5', color = '0.7')
-    plt.grid(which = 'minor', linestyle = ':', linewidth = '0.5', color = '0.85')
+    plt.grid(which='major', linestyle=':', linewidth='0.5', color='0.7')
+    plt.grid(which='minor', linestyle=':', linewidth='0.5', color='0.85')
     plt.show()
