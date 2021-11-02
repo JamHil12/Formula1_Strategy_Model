@@ -141,7 +141,9 @@ For a full demonstration, please refer to the Jupyter notebooks in the [build](h
 
 * Vectorization: over 10x improvement in computational speed by replacing for loops with vectorized equivalents.
 
-* Databases and Cloud Storage: for ease of storing and retrieving timing data at scale, using SQL queries to manipulate the data appropiately.
+* Databases and cloud storage: for ease of storing and retrieving timing data at scale, using SQL queries to manipulate the data appropiately.
+
+* Batch data processing: to process large datasets without taking up excessive space
 
 
 <!-- LICENSE -->
