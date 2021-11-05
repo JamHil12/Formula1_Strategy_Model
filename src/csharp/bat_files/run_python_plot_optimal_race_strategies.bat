@@ -1,0 +1,2 @@
+cd "C:\Users\jamie\OneDrive\Documents\F1 Strategy Model"
+"C:\Users\jamie\OneDrive\Documents\F1 Strategy Model\venv\Scripts\python.exe" "C:\Users\jamie\OneDrive\Documents\F1 Strategy Model\c_sharp_app_plot_optimal_race_strategies.py" "%~1"

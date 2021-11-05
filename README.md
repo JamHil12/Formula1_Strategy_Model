@@ -71,6 +71,8 @@ Note that the real-world optimisation of race strategy in F1 is much more comple
 ### Built With
 
 * [Python v3.7](https://www.python.org/)
+* [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
+* [Google BigQuery](https://cloud.google.com/bigquery)
 * [Jupyter notebook](https://jupyter.org/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -131,7 +133,11 @@ For more information on how to update lookups, download timing data and run the 
 
 * Estimate the the fuel effect on lap time, independently of tyre wear.
 
-For a full demonstration, please refer to the Jupyter notebooks in the [build](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/build) folder.
+* Use the app (developed using C#) for user-friendly interaction with the Python models
+
+  ![C# User Interface](https://github.com/JamHil12/Formula1_Strategy_Model/blob/master/docs/gifs/c_sharp_user_interface.gif)
+
+For more detail on how the tool can be used, please refer to the Jupyter notebooks in the [build](https://github.com/JamHil12/Formula1_Strategy_Model/tree/master/build) folder.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -144,6 +150,10 @@ For a full demonstration, please refer to the Jupyter notebooks in the [build](h
 * Databases and cloud storage: for ease of storing and retrieving timing data at scale, using SQL queries to manipulate the data appropiately.
 
 * Batch data processing: to process large datasets without taking up excessive space
+
+* Threading in C#: to display user messages whilst another task is running
+
+* User input validation with C# WPF: to ensure inputs are entered and are of the correct type
 
 
 <!-- LICENSE -->
